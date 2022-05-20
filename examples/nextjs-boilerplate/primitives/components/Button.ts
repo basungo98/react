@@ -1,5 +1,5 @@
 import { styleSystemProps } from '@primitives/shared/styled-system-props'
-import { DefaultProps } from '@primitives/types/styled-system'
+import { StyledSystemDefaultProps } from '@primitives/types/styled-system'
 import styled, { css } from 'styled-components'
 
 const buttonReset = css`
@@ -16,7 +16,7 @@ const buttonReset = css`
   -webkit-appearance: none;
 `
 
-const Button = styled.button<DefaultProps>`
+const Button = styled.button<StyledSystemDefaultProps>`
   ${buttonReset};
   ${styleSystemProps};
 `

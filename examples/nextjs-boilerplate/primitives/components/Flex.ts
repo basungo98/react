@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 import { styleSystemProps } from '@primitives/shared/styled-system-props'
-import { DefaultProps } from '@primitives/types/styled-system'
+import { StyledSystemDefaultProps } from '@primitives/types/styled-system'
 
-const Box = styled.div<DefaultProps>`
+const Box = styled.div<StyledSystemDefaultProps>`
   display: flex;
   ${styleSystemProps};
 `

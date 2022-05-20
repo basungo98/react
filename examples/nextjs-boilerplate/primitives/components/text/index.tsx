@@ -1,4 +1,4 @@
-import React from 'react'
+import { StyledSystemDefaultProps } from '@primitives/types/styled-system'
 
 import H1 from './h1'
 import H2 from './h2'
@@ -10,11 +10,6 @@ import Label from './label'
 import P from './p'
 import Span from './span'
 
-interface TextProps {
-  tag?: any
-  textRef?: any
-}
-
 const TagMap: any = {
   h1: H1,
   h2: H2,
@@ -25,6 +20,11 @@ const TagMap: any = {
   label: Label,
   p: P,
   span: Span,
+}
+
+type TextProps = StyledSystemDefaultProps & {
+  textRef?: any
+  tag?: any
 }
 
 const Text = ({ textRef, tag, ...props }: TextProps) => {
