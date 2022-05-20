@@ -1,4 +1,4 @@
-import React from 'react'
+import { DefaultProps } from '@primitives/types/styled-system'
 
 import H1 from './h1'
 import H2 from './h2'
@@ -9,11 +9,6 @@ import H6 from './h6'
 import Label from './label'
 import P from './p'
 import Span from './span'
-
-interface TextProps {
-  tag?: any
-  textRef?: any
-}
 
 const TagMap: any = {
   h1: H1,
@@ -27,7 +22,7 @@ const TagMap: any = {
   span: Span,
 }
 
-const Text = ({ textRef, tag, ...props }: TextProps) => {
+const Text = ({ textRef, tag, ...props }: DefaultProps | any) => {
   const Tag = tag ? TagMap[tag] : 'span'
   return Tag ? (
     <Tag ref={textRef} {...props} />
