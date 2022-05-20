@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 import { styleSystemProps } from '@primitives/shared/styled-system-props'
-import { DefaultProps } from '@primitives/types/styled-system'
+import { StyledSystemDefaultProps } from '@primitives/types/styled-system'
 
-const H2 = styled.h2<DefaultProps>`
+const H2 = styled.h2<StyledSystemDefaultProps>`
   ${styleSystemProps};
 `
 

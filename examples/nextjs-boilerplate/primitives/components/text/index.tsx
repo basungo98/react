@@ -1,4 +1,4 @@
-import { DefaultProps } from '@primitives/types/styled-system'
+import { StyledSystemDefaultProps } from '@primitives/types/styled-system'
 
 import H1 from './h1'
 import H2 from './h2'
@@ -22,7 +22,12 @@ const TagMap: any = {
   span: Span,
 }
 
-const Text = ({ textRef, tag, ...props }: DefaultProps | any) => {
+type TextProps = StyledSystemDefaultProps & {
+  textRef?: any
+  tag?: any
+}
+
+const Text = ({ textRef, tag, ...props }: TextProps) => {
   const Tag = tag ? TagMap[tag] : 'span'
   return Tag ? (
     <Tag ref={textRef} {...props} />

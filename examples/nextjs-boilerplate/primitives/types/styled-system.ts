@@ -11,7 +11,11 @@ import {
   TypographyProps,
 } from 'styled-system'
 
-export type DefaultProps =
+type HTMLDivAttributesProps = React.HTMLAttributes<HTMLElement> & {
+  ref: any
+}
+
+export type StyledSystemDefaultProps =
   | BackgroundProps
   | BorderProps
   | ColorProps
@@ -22,5 +26,10 @@ export type DefaultProps =
   | ShadowProps
   | SpaceProps
   | TypographyProps
+  | HTMLDivAttributesProps
 
-export type ImageProps = PositionProps | LayoutProps | SpaceProps
+export type ImageProps =
+  | PositionProps
+  | LayoutProps
+  | SpaceProps
+  | HTMLDivAttributesProps
