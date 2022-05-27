@@ -1,6 +1,6 @@
 import * as queriesAuth from '../queries/auth'
 import { httpResponse } from '../utils/httpResponse'
-import { getToken } from '../utils/users'
+import { getToken, getRoleName, comparePassword } from '../utils/users'
 
 export const createUser = async (req, res) => {
   try {
@@ -41,43 +41,35 @@ export const signin = async (req, res) => {
   try {
     const { usuario, password } = req.body
 
-    const data = await validateUser(usuario, password)
+    const data = await queriesAuth.validateUser(usuario)
 
-    if (!data) {
-      return httpResponse(res, [], 400, 'Password or Username is incorrect')
+    const { error } = data
+
+    if (error) {
+      return httpResponse(res, [], 400, error)
     }
 
     const { recordset } = data
 
-    if (!recordset) {
-      return httpResponse(res, [], 400, 'db error')
+    if (!recordset || recordset.length === 0) {
+      return httpResponse(res, [], 403, 'The username is incorrect.')
     }
 
-    return httpResponse(res, recordset, 200, null)
+    const { nombre, ape1, ape2, tipo, pass: dbPassword } = recordset[0]
 
-    // // Request body email can be an email or username
-    // const userFound = await User.findOne({ email: req.body.email }).populate(
-    //   'roles',
-    // )
+    const isPasswordEqual = await comparePassword(password, dbPassword)
 
-    // if (!userFound) return res.status(400).json({ message: 'User Not Found' })
+    if (!isPasswordEqual) {
+      return httpResponse(res, [], 403, 'The password is incorrect.')
+    }
 
-    // const matchPassword = await User.compareUserId(
-    //   req.body.password,
-    //   userFound.password,
-    // )
+    const role = getRoleName(tipo)
 
-    // if (!matchPassword)
-    //   return res.status(401).json({
-    //     token: null,
-    //     message: 'Invalid Password',
-    //   })
+    const responseData = { nombre, apellido1: ape1, apellido2: ape2, role }
 
-    // const token = jwt.sign({ id: userFound._id }, config.SECRET, {
-    //   expiresIn: 86400, // 24 hours
-    // })
+    const token = getToken({ usuario }, null)
 
-    // res.json({ token })
+    return httpResponse(res, responseData, 200, null, { token })
   } catch (error) {
     return httpResponse(res, [], 400, error)
   }

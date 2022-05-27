@@ -7,21 +7,25 @@ export const encryptPassword = async (password) => {
   return await bcrypt.hash(password, salt)
 }
 
-export const compareUserId = async (password, receivedPassword) => {
+export const comparePassword = async (password, receivedPassword) => {
   return await bcrypt.compare(password, receivedPassword)
 }
 
-export const encryptUsername = async (username) => {
-  const salt = await bcrypt.genSalt(10)
-  return await bcrypt.hash(username, salt)
-}
-
 export const compareUsername = async (username, receivedUsername) => {
-  return await bcrypt.compare(username, receivedUsername)
+  return username.toLowerCase() === receivedUsername.toLowerCase()
 }
 
 export const getRoleType = (role) => {
   return config.roles[role.toLowerCase()]
+}
+
+export const getRoleName = (type) => {
+  for (const [key, value] of Object.entries(config.roles)) {
+    if (value === type) {
+      return key
+    }
+  }
+  return null
 }
 
 export const getToken = (data, expiresIn) => {
