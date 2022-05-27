@@ -1,5 +1,5 @@
 import { validateDuplicatedUsers } from '../queries/auth'
-import { comparePassword, compareUsername } from '../utils/users'
+import { compareUserId, compareUsername } from '../utils/users'
 import { httpResponse } from '../utils/httpResponse'
 import config from '../config'
 
@@ -22,12 +22,13 @@ const checkDuplicatedUser = async (req, res, next) => {
 
     const { cedula: dbCedula, usuario: dbUsuario } = recordset[0]
 
-    const userIdIsDuplicated = await comparePassword(cedula, dbCedula)
-    const usernameIsDuplicated = await compareUsername(usuario, dbUsuario)
+    const userIdIsDuplicated = await compareUserId(cedula, dbCedula)
 
     if (userIdIsDuplicated) {
       return httpResponse(res, [], 403, `User id ${cedula} already exist`)
     }
+
+    const usernameIsDuplicated = await compareUsername(usuario, dbUsuario)
 
     if (usernameIsDuplicated) {
       return httpResponse(res, [], 403, `Username ${usuario} already exist`)

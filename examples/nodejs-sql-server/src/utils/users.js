@@ -11,6 +11,10 @@ export const comparePassword = async (password, receivedPassword) => {
   return await bcrypt.compare(password, receivedPassword)
 }
 
+export const compareUserId = async (userId, receivedUserId) => {
+  return userId.toLowerCase() === receivedUserId.toLowerCase()
+}
+
 export const compareUsername = async (username, receivedUsername) => {
   return username.toLowerCase() === receivedUsername.toLowerCase()
 }
