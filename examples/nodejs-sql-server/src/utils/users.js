@@ -41,3 +41,7 @@ export const getToken = (data, expiresIn) => {
 
   return jwt.sign(data, config.secret)
 }
+
+export const jwtVerify = (token) => {
+  return jwt.verify(token, config.secret)
+}

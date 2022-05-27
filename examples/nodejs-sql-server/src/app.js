@@ -7,6 +7,7 @@ import config from './config'
 import pkg from '../package.json'
 
 import authRoutes from './routes/auth.routes'
+import formsRoutes from './routes/forms.routes'
 
 const app = express()
 
@@ -38,5 +39,6 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/api/auth', authRoutes)
+app.use('/api/forms', formsRoutes)
 
 export default app

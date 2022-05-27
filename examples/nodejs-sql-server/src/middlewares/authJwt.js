@@ -1,53 +1,44 @@
-// import jwt from 'jsonwebtoken'
-// import config from '../config'
-// import User from '../models/User'
+import config from '../config'
+import { httpResponse } from '../utils/httpResponse'
+import { jwtVerify } from '../utils/users'
+import * as queriesAuth from '../queries/auth'
 
-// export const verifyToken = async (req, res, next) => {
-//   let token = req.headers['x-access-token']
-//   const secret = config.SECRET
+export const verifyToken = async (req, res, next) => {
+  let token = req.headers['x-access-token']
+  const secret = config.secret
 
-//   if (!token)
-//     return res
-//       .status(403)
-//       .json({ data: [], httpStatusCode: 403, error: 'No token provided' })
-//   else if (!secret) {
-//     return res
-//       .status(403)
-//       .json({
-//         data: [],
-//         httpStatusCode: 403,
-//         error:
-//           'ERROR: Server is not able to verify the token by an internal configuration error.',
-//       })
-//   }
+  if (!token) {
+    return httpResponse(res, [], 403, 'No token provided')
+  } else if (!secret) {
+    return httpResponse(
+      res,
+      [],
+      403,
+      'ERROR: Server is not able to verify the token by an internal configuration error.',
+    )
+  }
 
-//   try {
-//     const decoded = jwt.verify(token, config.SECRET)
-//     req.userId = decoded.id
+  try {
+    const decoded = jwtVerify(token)
 
-//     const user = await User.findById(req.userId, { password: 0 })
-//     if (!user) return res.status(404).json({ message: 'No user found' })
+    const { usuario } = decoded
 
-//     next()
-//   } catch (error) {
-//     return res.status(401).json({ message: 'Unauthorized!' })
-//   }
-// }
+    const data = await queriesAuth.validateUser(usuario)
 
-// export const isAdmin = async (req, res, next) => {
-//   try {
-//     const { tipoUsuario } = req.body
+    const { error } = data
 
-//     if (tipoUsuario == 1) {
-//       next()
-//       return
-//     }
+    if (error) {
+      return httpResponse(res, [], 400, error)
+    }
 
-//     return res
-//       .status(403)
-//       .json({ data: [], httpStatusCode: 403, error: 'Require Admin Role!' })
-//   } catch (error) {
-//     console.log(error)
-//     return res.status(500).json({ data: [], httpStatusCode: 500, error })
-//   }
-// }
+    const { recordset } = data
+
+    if (!recordset || recordset.length === 0) {
+      return res.status(401).json({ message: 'Unauthorized!' })
+    }
+
+    next()
+  } catch (error) {
+    return res.status(401).json({ message: 'Unauthorized!' })
+  }
+}
