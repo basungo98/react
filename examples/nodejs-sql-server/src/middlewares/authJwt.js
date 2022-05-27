@@ -34,11 +34,11 @@ export const verifyToken = async (req, res, next) => {
     const { recordset } = data
 
     if (!recordset || recordset.length === 0) {
-      return res.status(401).json({ message: 'Unauthorized!' })
+      return httpResponse(res, [], 401, 'Unauthorized!')
     }
 
     next()
   } catch (error) {
-    return res.status(401).json({ message: 'Unauthorized!' })
+    return httpResponse(res, [], 401, 'Unauthorized!')
   }
 }
