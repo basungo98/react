@@ -55,7 +55,7 @@ export const signin = async (req, res) => {
       return httpResponse(res, [], 403, 'The username is incorrect.')
     }
 
-    const { nombre, ape1, ape2, tipo, pass: dbPassword } = recordset[0]
+    const { cedula, nombre, ape1, ape2, tipo, pass: dbPassword } = recordset[0]
 
     const isPasswordEqual = await comparePassword(password, dbPassword)
 
@@ -65,7 +65,14 @@ export const signin = async (req, res) => {
 
     const role = getRoleName(tipo)
 
-    const responseData = { nombre, apellido1: ape1, apellido2: ape2, role }
+    const responseData = {
+      usuario,
+      cedula,
+      nombre,
+      apellido1: ape1,
+      apellido2: ape2,
+      role,
+    }
 
     const token = getToken({ usuario }, null)
 

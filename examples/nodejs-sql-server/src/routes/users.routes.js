@@ -1,13 +1,9 @@
 import { Router } from 'express'
 import * as usersCtrl from '../controllers/users.controller'
-import { verifySignup } from '../middlewares'
 
 const router = Router()
 
-router.post(
-  '/create',
-  [verifySignup.checkDuplicatedUser, verifySignup.checkRoleExist],
-  usersCtrl.createUser,
-)
+router.put('/update/password', usersCtrl.updatePassword)
+router.put('/delete/user', usersCtrl.deleteUser)
 
 export default router

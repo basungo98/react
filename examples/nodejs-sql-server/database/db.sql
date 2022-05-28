@@ -646,6 +646,7 @@ GO
 CREATE PROCEDURE dbo.sp_validar_usuario @p_usuario varchar(150)
 AS
   SELECT
+    dbo.tb_responsables.cedula,
     dbo.tb_responsables.nombre,
     dbo.tb_responsables.ape1,
     dbo.tb_responsables.ape2,
@@ -688,4 +689,60 @@ AS
 GO
 
 -- EXEC dbo.sp_validar_usuarios_duplicados 'usuario', 'cedula';
+-- GO
+
+
+-----------------------------------------------------------
+-- Autor: Daniela Mora Barquero
+-- Date: 05/26/2022
+-- Description: Update password
+-- The stored procedure update the user password
+-----------------------------------------------------------
+DROP PROCEDURE IF EXISTS dbo.sp_actualizar_password;
+GO
+
+CREATE PROCEDURE dbo.sp_actualizar_password @p_cedula varchar(20),
+@p_password varchar(150)
+AS
+  UPDATE tb_seguridad
+  SET pass = @p_password
+  WHERE cedula = @p_cedula
+
+  IF (@@ROWCOUNT > 0)
+    RETURN 0
+  ELSE
+    RETURN -1
+GO
+
+-- EXEC dbo.sp_actualizar_password 'cedula', 'password';
+-- GO
+
+-----------------------------------------------------------
+-- Autor: Daniela Mora Barquero
+-- Date: 05/26/2022
+-- Description: Delete user
+-- The stored procedure delete a user
+-----------------------------------------------------------
+DROP PROCEDURE IF EXISTS dbo.sp_eliminar_usuario;
+GO
+
+CREATE PROCEDURE dbo.sp_eliminar_usuario @p_cedula varchar(20), @p_cedula_editor varchar(20)
+AS
+  UPDATE tb_seguridad
+  SET estado = 0
+  WHERE cedula = @p_cedula
+
+  UPDATE tb_responsables
+  SET estado = 0,
+      usu_bor = @p_cedula_editor,
+      fecha_bor = CURRENT_TIMESTAMP
+  WHERE cedula = @p_cedula;
+
+  IF (@@ROWCOUNT > 0)
+    RETURN 0
+  ELSE
+    RETURN -1
+GO
+
+-- EXEC dbo.sp_eliminar_usuario 'cedula', 'cedula_editor';
 -- GO
