@@ -1,0 +1,40 @@
+MODULOS
+1 - Sistema
+    1.1 Mantenimiento de usuarios
+        1.1.1 Crear usuarios
+        1.1.2 Actualizar usuarios
+        1.1.3 Eliminar usuarios
+        1.1.4 Buscar usuarios
+    1.2 Login
+    1.3 Cambiar contraseña
+    1.4 Cerrar sesión
+    1.5 Salir
+2 - Plataforma
+    2.1 Realizar declaración (No funciona)
+    2.2 Exoneración
+    2.3 Tramites municipales
+    2.4 Formulario de patentes (No funciona)
+    2.5 Consulta de planos (No funciona)
+3 - Servicios
+    3.1 Formulario pago de Servicios
+    3.2 Denuncias y quejas
+        3.2.1 Registrar el Tramites
+        3.2.2 Imprimir la boleta (No funciona)
+    3.3 Denuncias o quejas ambientales
+        3.3.1 Registrar el Tramites
+        3.3.2 Imprimir la boleta
+    3.4 Tramites de acueducto
+        3.4.1 Reinstalacion de medidor
+        3.4.2 Revision de medidor
+        3.4.3 Cambio de medidor
+    3.5 Solicitud disponibilidad de agua
+    3.6 Solicitud disponibilidad de agua - Fraccionamientos - Urbanizaciones
+    3.7 Boleta de traspaso de servicios
+    3.8 Requisitos de licencias
+        3.8.1 Ley 7600
+        3.8.2 Ley de licores
+        3.8.3 declaración jurada de patentes
+        3.8.4 traspaso - Cambio - traslado
+        3.8.5 patente comercial
+        3.8.6 Renuncia
+

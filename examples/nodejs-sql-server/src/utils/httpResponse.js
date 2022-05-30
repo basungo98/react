@@ -1,8 +1,10 @@
-export const httpResponse = (response, data, httpStatusCode, error, rest) => {
-  return response.status(httpStatusCode).json({
-    data,
-    httpStatusCode,
-    error,
-    ...rest,
-  })
+const httpResponse = (response, data, httpStatusCode, error, rest) => {
+    return response.status(httpStatusCode).json({
+        data,
+        httpStatusCode,
+        error,
+        ...rest,
+    })
 }
+
+export default httpResponse

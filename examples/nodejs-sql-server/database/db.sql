@@ -728,21 +728,56 @@ GO
 
 CREATE PROCEDURE dbo.sp_eliminar_usuario @p_cedula varchar(20), @p_cedula_editor varchar(20)
 AS
-  UPDATE tb_seguridad
-  SET estado = 0
-  WHERE cedula = @p_cedula
+BEGIN
+  SET XACT_ABORT ON;
 
-  UPDATE tb_responsables
-  SET estado = 0,
-      usu_bor = @p_cedula_editor,
-      fecha_bor = CURRENT_TIMESTAMP
-  WHERE cedula = @p_cedula;
+  BEGIN TRY
+    BEGIN TRANSACTION;
+      UPDATE tb_seguridad
+      SET estado = 0
+      WHERE cedula = @p_cedula
 
-  IF (@@ROWCOUNT > 0)
-    RETURN 0
-  ELSE
-    RETURN -1
+      UPDATE tb_responsables
+      SET estado = 0,
+          usu_bor = @p_cedula_editor,
+          fecha_bor = CURRENT_TIMESTAMP
+      WHERE cedula = @p_cedula;
+
+    COMMIT TRANSACTION;
+  END TRY
+  BEGIN CATCH
+    IF (XACT_STATE()) = -1
+    BEGIN
+      ROLLBACK TRANSACTION;
+
+
+      DECLARE @ERROR_SEVERITY int,
+              @ERROR_STATE int,
+              @ERROR_NUMBER int,
+              @ERROR_LINE int,
+              @ERROR_MESSAGE nvarchar(4000);
+
+      SELECT
+        @ERROR_SEVERITY = ERROR_SEVERITY(),
+        @ERROR_STATE = ERROR_STATE(),
+        @ERROR_NUMBER = ERROR_NUMBER(),
+        @ERROR_LINE = ERROR_LINE(),
+        @ERROR_MESSAGE = ERROR_MESSAGE();
+
+      RAISERROR ('Msg %d, Line %d, :%s', @ERROR_SEVERITY, @ERROR_STATE, @ERROR_NUMBER, @ERROR_LINE, @ERROR_MESSAGE);
+      RETURN -1
+
+    END;
+
+    IF (XACT_STATE()) = 1
+    BEGIN
+      COMMIT TRANSACTION;
+    END;
+  END CATCH;
+  RETURN 0
+END
 GO
+
 
 -- EXEC dbo.sp_eliminar_usuario 'cedula', 'cedula_editor';
 -- GO
