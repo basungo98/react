@@ -5,5 +5,6 @@ const router = Router()
 
 router.put('/update/password', usersCtrl.updatePassword)
 router.put('/delete/user', usersCtrl.deleteUser)
+router.put('/update/user', usersCtrl.updateUser)
 
 export default router

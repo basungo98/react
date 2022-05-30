@@ -726,7 +726,7 @@ GO
 DROP PROCEDURE IF EXISTS dbo.sp_eliminar_usuario;
 GO
 
-CREATE PROCEDURE dbo.sp_eliminar_usuario @p_cedula varchar(20), @p_cedula_editor varchar(20)
+CREATE PROCEDURE dbo.sp_eliminar_usuario @p_cedula varchar(20), @usu_bor varchar(20)
 AS
 BEGIN
   SET XACT_ABORT ON;
@@ -739,7 +739,7 @@ BEGIN
 
       UPDATE tb_responsables
       SET estado = 0,
-          usu_bor = @p_cedula_editor,
+          usu_bor = @usu_bor,
           fecha_bor = CURRENT_TIMESTAMP
       WHERE cedula = @p_cedula;
 

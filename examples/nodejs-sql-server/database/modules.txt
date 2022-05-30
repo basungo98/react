@@ -22,19 +22,45 @@ MODULOS
         3.2.2 Imprimir la boleta (No funciona)
     3.3 Denuncias o quejas ambientales
         3.3.1 Registrar el Tramites
-        3.3.2 Imprimir la boleta
+        3.3.2 Imprimir la boleta (No funciona)
     3.4 Tramites de acueducto
-        3.4.1 Reinstalacion de medidor
-        3.4.2 Revision de medidor
+        3.4.1 Reinstalación de medidor
+        3.4.2 Revisión de medidor
         3.4.3 Cambio de medidor
     3.5 Solicitud disponibilidad de agua
     3.6 Solicitud disponibilidad de agua - Fraccionamientos - Urbanizaciones
     3.7 Boleta de traspaso de servicios
-    3.8 Requisitos de licencias
-        3.8.1 Ley 7600
-        3.8.2 Ley de licores
-        3.8.3 declaración jurada de patentes
-        3.8.4 traspaso - Cambio - traslado
-        3.8.5 patente comercial
-        3.8.6 Renuncia
+    3.8 Requisitos de licencias (Modulo no funciona)
+        3.8.1 Ley 7600 (No funciona)
+        3.8.2 Ley de licores (No funciona)
+        3.8.3 declaración jurada de patentes (No funciona)
+        3.8.4 traspaso - Cambio - traslado (No funciona)
+        3.8.5 patente comercial (No funciona)
+        3.8.6 Renuncia (No funciona)
+4 - Construcción
+    4.1 Requisitos obras generales (No funciona)
+    4.2 Requisitos Demoliciones y movimientos de tierra (No funciona)
+    4.3 Requisitos publicidad exterior (No funciona)
+    4.4 Requisitos Obras menores o de mantenimiento
+        4.4.1 Registrar el tramite
+        4.4.2 Imprimir boleta (No funciona)
+    4.5 Solicitud de visado municipal de planos de catastro
+        4.5.1 Registrar el tramite
+        4.5.2 Imprimir boleta (No funciona)
+    4.6 Solicitud de certificación de uso de suelo
+        4.6.1 Registrar el tramite
+        4.6.2 Imprimir boleta (No funciona)
+5 - Administración
+    5.1 Tiempos de atención
+    5.2 Seguimiento
+        5.2.1 Buscar
+        5.2.2 Guardar
+    5.3 Tramites
+        5.3.1 Buscar
+        5.3.1 Guardar
+        5.3.1 Actualizar
+        5.3.1 Eliminar
+6 - Acerca
+    6.1 Acerca de
+
 

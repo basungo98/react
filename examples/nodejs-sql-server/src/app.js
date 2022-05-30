@@ -8,7 +8,7 @@ import pkg from '../package.json'
 
 import authRoutes from './routes/auth.routes'
 import usersRoutes from './routes/users.routes'
-import formsRoutes from './routes/forms.routes'
+// import formsRoutes from './routes/forms.routes'
 
 const app = express()
 
@@ -28,7 +28,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 // Welcome Routes
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
     res.json({
         message: 'Welcome to my Products API',
         name: app.get('pkg').name,
@@ -41,6 +41,6 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/api/auth', authRoutes)
 app.use('/api/users', usersRoutes)
-app.use('/api/forms', formsRoutes)
+// app.use('/api/forms', formsRoutes)
 
 export default app
