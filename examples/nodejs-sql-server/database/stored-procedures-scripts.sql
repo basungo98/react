@@ -493,16 +493,56 @@ GO
 -- EXEC [dbo].[sp_guardar_quejas]  'cedula', 'gis', 'denuncia', 'resolucion', 'observaciones', 'responsable', 'nombre', 'medio', 'finca', 'derecho';
 -- GO
 
-
-
-            
-
-
-
-
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.2.2 Imprimir la boleta (No funciona) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     3.3 Denuncias o quejas ambientales @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.3.1 Registrar el Tramites @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+-----------------------------------------------------------
+-- Autor: Daniela Mora Barquero
+-- Date: 05/26/2022
+-- Description: Save exonera
+-- The stored procedure save exonera
+-----------------------------------------------------------
+DROP PROCEDURE IF EXISTS [dbo].[sp_guardar_quejas];
+GO
+
+CREATE PROCEDURE [dbo].[sp_guardar_quejas] 
+@p_propietario varchar(50),
+@p_cedula_prop varchar(20),
+@p_nombre_soli varchar(50),
+@p_cedula_soli varchar(20),
+@p_direccion varchar(100),
+@p_gis varchar(20),
+@p_tel_fax varchar(20),
+@p_correo varchar(30),
+@p_distrito varchar(15),
+@p_servicio varchar(40),
+@p_queja varchar(1000),
+@p_anonino varchar(2),
+@p_copia varchar(2),
+@p_responsable varchar(20)
+AS
+  DECLARE @v_consecutivo bigint
+
+  SET @v_consecutivo = (SELECT
+    ISNULL(MAX(consecutivo), 0) + 1
+  FROM [dbo].[tb_consecutivo])
+
+
+  INSERT INTO [dbo].[tb_queja_ambiental] (boleta, fecha, propietario, cedula_prop, nombre_soli, cedula_soli, direccion, gis, tel_fax,
+  correo, distrito, servicio, queja, anonino, copia, responsable)
+    VALUES (@v_consecutivo, CURRENT_TIMESTAMP, @p_propietario, @p_cedula_prop, @p_nombre_soli, @p_cedula_soli, @p_direccion, @p_gis, @p_tel_fax, @p_correo, @p_distrito, @p_servicio, @p_queja, @p_anonino, @p_copia, @p_responsable)
+
+  INSERT INTO [dbo].[tb_consecutivo]
+    VALUES (@v_consecutivo)
+
+  INSERT INTO [dbo].[tb_tiempos] (boleta, cedula, fecha, hora, tiempo, tipo)
+    VALUES (@v_consecutivo, @p_responsable, CURRENT_TIMESTAMP, FORMAT(CURRENT_TIMESTAMP, 'hh:mm:ss tt'), '0', 'Formulario para quejas o denuncias ambientales')
+GO
+
+-- EXEC [dbo].[sp_guardar_quejas]   'propietario', 'cedula_prop', 'nombre_soli', 'cedula_soli', 'direccion', 'gis', 'tel_fax', 'correo', 'distrito', 'servicio', 'queja', 'SI', 'NO', 'responsable';
+-- GO
+
+
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.3.2 Imprimir la boleta (No funciona) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     3.4 Tramites de acueducto @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.4.1 Reinstalación de medidor @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
