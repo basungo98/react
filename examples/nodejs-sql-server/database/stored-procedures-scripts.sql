@@ -546,7 +546,90 @@ GO
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.3.2 Imprimir la boleta (No funciona) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     3.4 Tramites de acueducto @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.4.1 Reinstalación de medidor @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+-----------------------------------------------------------
+-- Autor: Daniela Mora Barquero
+-- Date: 05/26/2022
+-- Description: Save exonera
+-- The stored procedure save exonera
+-----------------------------------------------------------
+DROP PROCEDURE IF EXISTS [dbo].[sp_guardar_acueducto];
+GO
+
+CREATE PROCEDURE [dbo].[sp_guardar_acueducto] @p_abonado varchar(50),
+@p_solicitante varchar(50),
+@p_medidor varchar(20),
+@p_gis varchar(20),
+@p_cedula varchar(20),
+@p_telefono varchar(20),
+@p_motivo varchar(40),
+@p_direccion varchar(150),
+@p_distrito varchar(20),
+@p_responsable varchar(20)
+AS
+  DECLARE @v_consecutivo bigint
+
+  SET @v_consecutivo = (SELECT
+    ISNULL(MAX(consecutivo), 0) + 1
+  FROM [dbo].[tb_consecutivo])
+
+  INSERT INTO [dbo].[tb_acueducto]
+    VALUES (@v_consecutivo, @p_abonado, @p_solicitante, @p_medidor, @p_gis, @p_cedula, @p_telefono, @p_motivo, @p_direccion, @p_distrito, CURRENT_TIMESTAMP, @p_responsable, 1)
+
+  INSERT INTO [dbo].[tb_consecutivo]
+    VALUES (@v_consecutivo)
+
+  INSERT INTO [dbo].[tb_tiempos] (boleta, cedula, fecha, hora, tiempo, tipo)
+    VALUES (@v_consecutivo, @p_responsable, CURRENT_TIMESTAMP, FORMAT(CURRENT_TIMESTAMP, 'hh:mm:ss tt'), '0', 'Solicitud de Reinstalación de Medidores')
+GO
+
+-- EXEC [dbo].[sp_guardar_acueducto] 'abonado', 'solicitante', 'medidor', 'gis', 'cedula', 'telefono', 'motivo', 'direccion', 'distrito', 'responsable';
+-- GO
+
+
+
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.4.2 Revisión de medidor @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+-----------------------------------------------------------
+-- Autor: Daniela Mora Barquero
+-- Date: 05/26/2022
+-- Description: Save exonera
+-- The stored procedure save exonera
+-----------------------------------------------------------
+DROP PROCEDURE IF EXISTS [dbo].[sp_guardar_medidor_revision];
+GO
+
+CREATE PROCEDURE [dbo].[sp_guardar_medidor_revision] @p_abonado varchar(50),
+@p_solicitante varchar(50),
+@p_medidor varchar(20),
+@p_gis varchar(20),
+@p_cedula varchar(20),
+@p_telefono varchar(20),
+@p_motivo varchar(40),
+@p_direccion varchar(150),
+@p_distrito varchar(20),
+@p_responsable varchar(20)
+AS
+  DECLARE @v_consecutivo bigint
+
+  SET @v_consecutivo = (SELECT
+    ISNULL(MAX(consecutivo), 0) + 1
+  FROM [dbo].[tb_consecutivo])
+
+  INSERT INTO [dbo].[tb_medidor_revision]
+    VALUES (@v_consecutivo, @p_abonado, @p_solicitante, @p_medidor, @p_gis, @p_cedula, @p_telefono, @p_motivo, @p_direccion, @p_distrito, CURRENT_TIMESTAMP, @p_responsable, 1)
+
+  INSERT INTO [dbo].[tb_consecutivo]
+    VALUES (@v_consecutivo)
+
+  INSERT INTO [dbo].[tb_tiempos] (boleta, cedula, fecha, hora, tiempo, tipo)
+    VALUES (@v_consecutivo, @p_responsable, CURRENT_TIMESTAMP, FORMAT(CURRENT_TIMESTAMP, 'hh:mm:ss tt'), '0', 'Solicitud de Revisi�n de Medidor')
+GO
+
+-- EXEC [dbo].[sp_guardar_medidor_revision] 'abonado', 'solicitante', 'medidor', 'gis', 'cedula', 'telefono', 'motivo', 'direccion', 'distrito', 'responsable';
+-- GO
+
+
+
+
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.4.3 Cambio de medidor @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     3.5 Solicitud disponibilidad de agua @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     3.6 Solicitud disponibilidad de agua - Fraccionamientos - Urbanizaciones @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
