@@ -70,8 +70,8 @@ BEGIN
 END
 GO
 
-EXEC [dbo].[sp_insertar_responsable] '114130273', 'Daniela', 'Mora', 'Barquero', 'Heredia', 1, '114130273', "daniela.mora", "Dnlmora98";
-GO
+-- EXEC [dbo].[sp_insertar_responsable] '114130273', 'Daniela', 'Mora', 'Barquero', 'Heredia', 1, '114130273', "daniela.mora", "Dnlmora98";
+-- GO
 
 
 -----------------------------------------------------------
@@ -238,8 +238,8 @@ AS
   )
 GO
 
-EXEC [dbo].[sp_buscar_usuarios] 'filtro', 'valor';
-GO
+-- EXEC [dbo].[sp_buscar_usuarios] 'filtro', 'valor';
+-- GO
 
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     1.2 Login @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -----------------------------------------------------------
@@ -444,8 +444,8 @@ AS
     VALUES (@v_consecutivo, @p_responsable, CURRENT_TIMESTAMP, FORMAT(CURRENT_TIMESTAMP, 'hh:mm:ss tt'), '0', 'Formulario para la exoneración de impuestos')
 GO
 
-EXEC [dbo].[sp_guardar_pago_serv]  'cedula', 'gis', 'X', 'X', 'X', 'X', 'X', 'responsable', 'nombre', 'medio';
-GO
+-- EXEC [dbo].[sp_guardar_pago_serv]  'cedula', 'gis', 'X', 'X', 'X', 'X', 'X', 'responsable', 'nombre', 'medio';
+-- GO
 
 
             
@@ -502,10 +502,10 @@ GO
 -- Description: Save exonera
 -- The stored procedure save exonera
 -----------------------------------------------------------
-DROP PROCEDURE IF EXISTS [dbo].[sp_guardar_quejas];
+DROP PROCEDURE IF EXISTS [dbo].[sp_guardar_queja_ambiental];
 GO
 
-CREATE PROCEDURE [dbo].[sp_guardar_quejas] 
+CREATE PROCEDURE [dbo].[sp_guardar_queja_ambiental] 
 @p_propietario varchar(50),
 @p_cedula_prop varchar(20),
 @p_nombre_soli varchar(50),
@@ -539,7 +539,7 @@ AS
     VALUES (@v_consecutivo, @p_responsable, CURRENT_TIMESTAMP, FORMAT(CURRENT_TIMESTAMP, 'hh:mm:ss tt'), '0', 'Formulario para quejas o denuncias ambientales')
 GO
 
--- EXEC [dbo].[sp_guardar_quejas]   'propietario', 'cedula_prop', 'nombre_soli', 'cedula_soli', 'direccion', 'gis', 'tel_fax', 'correo', 'distrito', 'servicio', 'queja', 'SI', 'NO', 'responsable';
+-- EXEC [dbo].[sp_guardar_queja_ambiental]   'propietario', 'cedula_prop', 'nombre_soli', 'cedula_soli', 'direccion', 'gis', 'tel_fax', 'correo', 'distrito', 'servicio', 'queja', 'SI', 'NO', 'responsable';
 -- GO
 
 
@@ -628,9 +628,48 @@ GO
 -- GO
 
 
-
-
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.4.3 Cambio de medidor @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+-----------------------------------------------------------
+-- Autor: Daniela Mora Barquero
+-- Date: 05/26/2022
+-- Description: Save exonera
+-- The stored procedure save exonera
+-----------------------------------------------------------
+DROP PROCEDURE IF EXISTS [dbo].[sp_guardar_medidor_cambio];
+GO
+
+CREATE PROCEDURE [dbo].[sp_guardar_medidor_cambio] @p_abonado varchar(50),
+@p_solicitante varchar(50),
+@p_medidor varchar(20),
+@p_gis varchar(20),
+@p_cedula varchar(20),
+@p_telefono varchar(20),
+@p_motivo varchar(40),
+@p_direccion varchar(150),
+@p_distrito varchar(20),
+@p_responsable varchar(20)
+AS
+  DECLARE @v_consecutivo bigint
+
+  SET @v_consecutivo = (SELECT
+    ISNULL(MAX(consecutivo), 0) + 1
+  FROM [dbo].[tb_consecutivo])
+
+  INSERT INTO [dbo].[tb_medidor_cambio]
+    VALUES (@v_consecutivo, @p_abonado, @p_solicitante, @p_medidor, @p_gis, @p_cedula, @p_telefono, @p_motivo, @p_direccion, @p_distrito, CURRENT_TIMESTAMP, @p_responsable, 1)
+
+  INSERT INTO [dbo].[tb_consecutivo]
+    VALUES (@v_consecutivo)
+
+  INSERT INTO [dbo].[tb_tiempos] (boleta, cedula, fecha, hora, tiempo, tipo)
+    VALUES (@v_consecutivo, @p_responsable, CURRENT_TIMESTAMP, FORMAT(CURRENT_TIMESTAMP, 'hh:mm:ss tt'), '0', 'Solicitud de Cambio de Medidor')
+GO
+
+-- EXEC [dbo].[sp_guardar_medidor_cambio] 'abonado', 'solicitante', 'medidor', 'gis', 'cedula', 'telefono', 'motivo', 'direccion', 'distrito', 'responsable';
+-- GO
+
+
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     3.5 Solicitud disponibilidad de agua @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     3.6 Solicitud disponibilidad de agua - Fraccionamientos - Urbanizaciones @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     3.7 Boleta de traspaso de servicios @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
