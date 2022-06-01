@@ -452,6 +452,54 @@ GO
 
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     3.2 Denuncias y quejas @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.2.1 Registrar el Tramites @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+-----------------------------------------------------------
+-- Autor: Daniela Mora Barquero
+-- Date: 05/26/2022
+-- Description: Save exonera
+-- The stored procedure save exonera
+-----------------------------------------------------------
+DROP PROCEDURE IF EXISTS [dbo].[sp_guardar_quejas];
+GO
+
+CREATE PROCEDURE [dbo].[sp_guardar_quejas] 
+@p_cedula varchar(20),
+@p_gis varchar(20),
+@p_denuncia varchar(1000),
+@p_resolucion varchar(1000),
+@p_observaciones varchar(1000),
+@p_responsable varchar(20),
+@p_nombre varchar(50),
+@p_medio varchar(50),
+@p_finca varchar(20),
+@p_derecho varchar(20)
+AS
+  DECLARE @v_consecutivo bigint
+
+  SET @v_consecutivo = (SELECT
+    ISNULL(MAX(consecutivo), 0) + 1
+  FROM [dbo].[tb_consecutivo])
+
+  INSERT INTO [dbo].[tb_quejas] (boleta, cedula, gis, denuncia, resolucion, observaciones, recibe, fecha, nombre, medio, finca, derecho)
+    VALUES (@v_consecutivo, @p_cedula, @p_gis, @p_denuncia, @p_resolucion, @p_observaciones, @p_responsable, CURRENT_TIMESTAMP, @p_nombre, @p_medio, @p_finca, @p_derecho)
+
+  INSERT INTO [dbo].[tb_consecutivo]
+    VALUES (@v_consecutivo)
+
+  INSERT INTO [dbo].[tb_tiempos] (boleta, cedula, fecha, hora, tiempo, tipo)
+    VALUES (@v_consecutivo, @p_responsable, CURRENT_TIMESTAMP, FORMAT(CURRENT_TIMESTAMP, 'hh:mm:ss tt'), '0', 'Formulario para quejas o denuncias')
+GO
+
+-- EXEC [dbo].[sp_guardar_quejas]  'cedula', 'gis', 'denuncia', 'resolucion', 'observaciones', 'responsable', 'nombre', 'medio', 'finca', 'derecho';
+-- GO
+
+
+
+            
+
+
+
+
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.2.2 Imprimir la boleta (No funciona) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     3.3 Denuncias o quejas ambientales @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.3.1 Registrar el Tramites @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
