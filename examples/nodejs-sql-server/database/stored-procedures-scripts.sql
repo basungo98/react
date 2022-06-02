@@ -936,6 +936,80 @@ GO
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         4.5.2 Imprimir boleta (No funciona) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     4.6 Solicitud de certificación de uso de suelo @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         4.6.1 Registrar el tramite @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+-----------------------------------------------------------
+-- Autor: Daniela Mora Barquero
+-- Date: 05/26/2022
+-- Description: Save exonera
+-- The stored procedure save exonera
+-----------------------------------------------------------
+DROP PROCEDURE IF EXISTS [dbo].[sp_guardar_uso_suelo];
+GO
+
+CREATE PROCEDURE [dbo].[sp_guardar_uso_suelo] 
+@p_obra_nueva varchar(1), 
+@p_ampli_remod varchar(1), 
+@p_patente varchar(1), 
+@p_renov_patente varchar(1), 
+@p_informacion varchar(1), 
+@p_tram_prime_vez varchar(1), 
+@p_renovacion varchar(1), 
+@p_vivien_inifam varchar(1), 
+@p_apartamentos varchar(1), 
+@p_condominio varchar(1), 
+@p_urbanizacion varchar(1), 
+@p_comercial varchar(50), 
+@p_industrial varchar(20), 
+@p_avicola varchar(1), 
+@p_porcina varchar(1), 
+@p_otra varchar(20), 
+@p_otros_usos varchar(20), 
+@p_uso_actual varchar(20), 
+@p_lote_vacio varchar(1), 
+@p_area_constru int, 
+@p_mov_suelo int, 
+@p_altura_edifi int, 
+@p_distrito varchar(20), 
+@p_localidad varchar(50), 
+@p_n_plano varchar(20), 
+@p_direccion varchar(200), 
+@p_nombre_propietario varchar(50), 
+@p_cedula_propietario varchar(20), 
+@p_nombre_sol varchar(50), 
+@p_cedula_sol varchar(50), 
+@p_telefono_sol varchar(20), 
+@p_medio_plat varchar(1), 
+@p_medio varchar(50), 
+@p_gis_dia varchar(20), 
+@p_n_finca_dia varchar(20), 
+@p_distrito_dia varchar(20), 
+@p_servicios_dia varchar(1), 
+@p_bienes_dia varchar(1), 
+@p_no_contribuye_dia varchar(1), 
+@p_copia_plano varchar(1), 
+@p_pago_cert_uso_suelo varchar(1), 
+@p_eval_amb varchar(1), 
+@p_responsable varchar(20)
+
+AS
+  DECLARE @v_consecutivo bigint
+
+  SET @v_consecutivo = (SELECT
+    ISNULL(MAX(consecutivo), 0) + 1
+  FROM [dbo].[tb_consecutivo])
+
+  INSERT INTO [dbo].[tb_uso_suelo] (boleta, obra_nueva, ampli_remod, patente, renov_patente, informacion, tram_prime_vez, renovacion, vivien_inifam, apartamentos, condominio, urbanizacion, comercial, industrial, avicola, porcina, otra, otros_usos, uso_actual, lote_vacio, area_constru, mov_suelo, altura_edifi, distrito, localidad, n_plano, direccion, nombre_propietario, cedula_propietario, nombre_sol, cedula_sol, telefono_sol, medio_plat, medio, gis_dia, n_finca_dia, distrito_dia, servicios_dia, bienes_dia, no_contribuye_dia, copia_plano, pago_cert_uso_suelo, eval_amb, responsable, fecha)
+    VALUES (@v_consecutivo, @p_obra_nueva, @p_ampli_remod, @p_patente, @p_renov_patente, @p_informacion, @p_tram_prime_vez, @p_renovacion, @p_vivien_inifam, @p_apartamentos, @p_condominio, @p_urbanizacion, @p_comercial, @p_industrial, @p_avicola, @p_porcina, @p_otra, @p_otros_usos, @p_uso_actual, @p_lote_vacio, @p_area_constru, @p_mov_suelo, @p_altura_edifi, @p_distrito, @p_localidad, @p_n_plano, @p_direccion, @p_nombre_propietario, @p_cedula_propietario, @p_nombre_sol, @p_cedula_sol, @p_telefono_sol, @p_medio_plat, @p_medio, @p_gis_dia, @p_n_finca_dia, @p_distrito_dia, @p_servicios_dia, @p_bienes_dia, @p_no_contribuye_dia, @p_copia_plano, @p_pago_cert_uso_suelo, @p_eval_amb, @p_responsable, CURRENT_TIMESTAMP)
+
+  INSERT INTO [dbo].[tb_consecutivo]
+    VALUES (@v_consecutivo)
+
+  INSERT INTO [dbo].[tb_tiempos] (boleta, cedula, fecha, hora, tiempo, tipo)
+    VALUES (@v_consecutivo, @p_responsable, CURRENT_TIMESTAMP, FORMAT(CURRENT_TIMESTAMP, 'hh:mm:ss tt'), '0', 'Boleta de visado de plano de catastro')
+GO
+
+-- EXEC [dbo].[sp_guardar_uso_suelo] 'obra_nueva', 'ampli_remod', 'patente', 'renov_patente', 'informacion', 'tram_prime_vez', 'renovacion', 'vivien_inifam', 'apartamentos', 'condominio', 'urbanizacion', 'comercial', 'industrial', 'avicola', 'porcina', 'otra', 'otros_usos', 'uso_actual', 'lote_vacio', 1, 1, 1, 'distrito', 'localidad', 'n_plano', 'direccion', 'nombre_propietario', 'cedula_propietario', 'nombre_sol', 'cedula_sol', 'telefono_sol', 'medio_plat', 'medio', 'gis_dia', 'n_finca_dia', 'distrito_dia', 'servicios_dia', 'bienes_dia', 'no_contribuye_dia', 'copia_plano', 'pago_cert_uso_suelo', 'eval_amb', 'responsable';
+-- GO
+
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         4.6.2 Imprimir boleta (No funciona) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 5 - Administración @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     5.1 Tiempos de atención @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
