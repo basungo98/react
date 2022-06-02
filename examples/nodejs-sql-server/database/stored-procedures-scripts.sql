@@ -814,9 +814,6 @@ GO
 -- GO
 
 
-
-
-
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     3.8 Requisitos de licencias (Modulo no funciona) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.8.1 Ley 7600 (No funciona) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.8.2 Ley de licores (No funciona) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -830,6 +827,58 @@ GO
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     4.3 Requisitos publicidad exterior (No funciona) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     4.4 Requisitos Obras menores o de mantenimiento @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         4.4.1 Registrar el tramite @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+-----------------------------------------------------------
+-- Autor: Daniela Mora Barquero
+-- Date: 05/26/2022
+-- Description: Save exonera
+-- The stored procedure save exonera
+-----------------------------------------------------------
+DROP PROCEDURE IF EXISTS [dbo].[sp_guardar_obras_menores_o_mantenimiento];
+GO
+
+CREATE PROCEDURE [dbo].[sp_guardar_obras_menores_o_mantenimiento] @p_distrito varchar(20),
+@p_localidad varchar(50),
+@p_n_plano varchar(20),
+@p_direccion varchar(200),
+@p_nombre_propietario varchar(50),
+@p_cedula_propietario varchar(20),
+@p_nombre_sol varchar(50),
+@p_cedula_sol varchar(50),
+@p_telefono_sol varchar(20),
+@p_medio varchar(50),
+@p_gis_dia varchar(20),
+@p_n_finca_dia varchar(20),
+@p_distrito_dia varchar(20),
+@p_servicios_dia varchar(1),
+@p_bienes_dia varchar(1),
+@p_no_contribuye_dia varchar(1),
+@p_croquis varchar(1),
+@p_plano varchar(1),
+@p_responsable varchar(20)
+AS
+  DECLARE @v_consecutivo bigint
+
+  SET @v_consecutivo = (SELECT
+    ISNULL(MAX(consecutivo), 0) + 1
+  FROM [dbo].[tb_consecutivo])
+
+  INSERT INTO [dbo].[tb_obras_menores_o_mantenimiento] (boleta, distrito, localidad, n_plano, direccion, nombre_propietario, cedula_propietario, nombre_sol, cedula_sol, telefono_sol, medio, gis_dia, n_finca_dia, distrito_dia, servicios_dia, bienes_dia,
+  no_contribuye_dia, croquis, plano, responsable, fecha)
+    VALUES (@v_consecutivo, @p_distrito, @p_localidad, @p_n_plano, @p_direccion, @p_nombre_propietario, @p_cedula_propietario, @p_nombre_sol, @p_cedula_sol, @p_telefono_sol, @p_medio, @p_gis_dia, @p_n_finca_dia, @p_distrito_dia, @p_servicios_dia, @p_bienes_dia, @p_no_contribuye_dia, @p_croquis, @p_plano, @p_responsable, CURRENT_TIMESTAMP)
+
+  INSERT INTO [dbo].[tb_consecutivo]
+    VALUES (@v_consecutivo)
+
+  INSERT INTO [dbo].[tb_tiempos] (boleta, cedula, fecha, hora, tiempo, tipo)
+    VALUES (@v_consecutivo, @p_responsable, CURRENT_TIMESTAMP, FORMAT(CURRENT_TIMESTAMP, 'hh:mm:ss tt'), '0', 'Boleta de Obras menores o Mantenimiento')
+GO
+
+-- EXEC [dbo].[sp_guardar_obras_menores_o_mantenimiento] 'distrito', 'localidad', 'n_plano', 'direccion', 'nombre_propietario', 'cedula_propietario', 'nombre_sol', 'cedula_sol', 'telefono_sol', 'medio', 'gis_dia', 'n_finca_dia', 'distrito_dia', 'servicios_dia', 'bienes_dia', 'no_contribuye_dia', 'croquis', 'plano', 'responsable';
+-- GO
+
+
+
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         4.4.2 Imprimir boleta (No funciona) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     4.5 Solicitud de visado municipal de planos de catastro @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         4.5.1 Registrar el tramite @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
