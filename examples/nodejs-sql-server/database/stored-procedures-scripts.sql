@@ -717,9 +717,60 @@ GO
 -- GO
 
 
-
-
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     3.6 Solicitud disponibilidad de agua - Fraccionamientos - Urbanizaciones @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+-----------------------------------------------------------
+-- Autor: Daniela Mora Barquero
+-- Date: 05/26/2022
+-- Description: Save exonera
+-- The stored procedure save exonera
+-----------------------------------------------------------
+DROP PROCEDURE IF EXISTS [dbo].[sp_guardar_agua_frac_urba];
+GO
+
+CREATE PROCEDURE [dbo].[sp_guardar_agua_frac_urba] @p_plano varchar(1),
+@p_literal varchar(1),
+@p_fot_ced varchar(1),
+@p_desc_proy varchar(1),
+@p_croquis varchar(1),
+@p_n_pajas int,
+@p_cedula varchar(20),
+@p_nombre varchar(50),
+@p_gis varchar(20),
+@p_folio varchar(20),
+@p_num_plano varchar(20),
+@p_direccion varchar(250),
+@p_resid varchar(1),
+@p_comer varchar(1),
+@p_medio varchar(50),
+@p_responsable varchar(20)
+AS
+  DECLARE @v_consecutivo bigint
+
+  SET @v_consecutivo = (SELECT
+    ISNULL(MAX(consecutivo), 0) + 1
+  FROM [dbo].[tb_consecutivo])
+
+  INSERT INTO [dbo].[tb_agua_frac_urba] ([boleta], [plano], [literal], [fot_ced], [desc_proy], [croquis], [n_pajas], [cedula], [nombre], [gis], [folio], [num_plano], [direccion], [resid], [comer], [medio], [fecha], [responsable])
+    VALUES (@v_consecutivo, @p_plano, @p_literal, @p_fot_ced, @p_desc_proy, @p_croquis, @p_n_pajas, @p_cedula, @p_nombre, @p_gis, @p_folio, @p_num_plano, @p_direccion, @p_resid, @p_comer, @p_medio, CURRENT_TIMESTAMP, @p_responsable)
+
+  INSERT INTO [dbo].[tb_consecutivo]
+    VALUES (@v_consecutivo)
+
+  INSERT INTO [dbo].[tb_tiempos] (boleta, cedula, fecha, hora, tiempo, tipo)
+    VALUES (@v_consecutivo, @p_responsable, CURRENT_TIMESTAMP, FORMAT(CURRENT_TIMESTAMP, 'hh:mm:ss tt'), '0', 'Solicitud disponibilidad de agua - fraccionamiento - urbanización')
+GO
+
+EXEC [dbo].[sp_guardar_agua_frac_urba] 'plano', 'literal', 'fot_ced', 'desc_proy', 'croquis', 1, 'cedula', 'nombre', 'gis', 'folio', 'num_plano', 'direccion', 'resid', 'comer', 'medio', 'responsable';
+GO
+
+
+
+
+
+
+            
+
+
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     3.7 Boleta de traspaso de servicios @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     3.8 Requisitos de licencias (Modulo no funciona) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.8.1 Ley 7600 (No funciona) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
