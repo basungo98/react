@@ -727,7 +727,8 @@ GO
 DROP PROCEDURE IF EXISTS [dbo].[sp_guardar_agua_frac_urba];
 GO
 
-CREATE PROCEDURE [dbo].[sp_guardar_agua_frac_urba] @p_plano varchar(1),
+CREATE PROCEDURE [dbo].[sp_guardar_agua_frac_urba] 
+@p_plano varchar(1),
 @p_literal varchar(1),
 @p_fot_ced varchar(1),
 @p_desc_proy varchar(1),
@@ -760,18 +761,62 @@ AS
     VALUES (@v_consecutivo, @p_responsable, CURRENT_TIMESTAMP, FORMAT(CURRENT_TIMESTAMP, 'hh:mm:ss tt'), '0', 'Solicitud disponibilidad de agua - fraccionamiento - urbanización')
 GO
 
-EXEC [dbo].[sp_guardar_agua_frac_urba] 'plano', 'literal', 'fot_ced', 'desc_proy', 'croquis', 1, 'cedula', 'nombre', 'gis', 'folio', 'num_plano', 'direccion', 'resid', 'comer', 'medio', 'responsable';
-GO
+-- EXEC [dbo].[sp_guardar_agua_frac_urba] 'plano', 'literal', 'fot_ced', 'desc_proy', 'croquis', 1, 'cedula', 'nombre', 'gis', 'folio', 'num_plano', 'direccion', 'resid', 'comer', 'medio', 'responsable';
+-- GO
 
-
-
-
-
-
-            
 
 
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     3.7 Boleta de traspaso de servicios @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+-----------------------------------------------------------
+-- Autor: Daniela Mora Barquero
+-- Date: 05/26/2022
+-- Description: Save exonera
+-- The stored procedure save exonera
+-----------------------------------------------------------
+DROP PROCEDURE IF EXISTS [dbo].[sp_guardar_traspasos];
+GO
+
+CREATE PROCEDURE [dbo].[sp_guardar_traspasos] @p_cedula_sol varchar(20),
+@p_cedula_tras varchar(20),
+@p_gis varchar(20),
+@p_serv_rec_bas varchar(1),
+@p_serv_orn_mant_paq varchar(1),
+@p_serv_ase_vias varchar(1),
+@p_serv_agua_pot varchar(1),
+@p_num_medidor varchar(20),
+@p_acepta varchar(1),
+@p_responsable varchar(20),
+@p_nombre_sol varchar(50),
+@p_nombre_tras varchar(50),
+@p_medio varchar(50),
+@p_chk_oficio varchar(1),
+@p_oficio varchar(50),
+@p_sol_cliente varchar(1)
+AS
+  DECLARE @v_consecutivo bigint
+
+  SET @v_consecutivo = (SELECT
+    ISNULL(MAX(consecutivo), 0) + 1
+  FROM [dbo].[tb_consecutivo])
+
+  INSERT INTO [dbo].[tb_traspasos] (num_boleta, cedula_sol, cedula_tras, gis, serv_rec_bas, serv_orn_mant_paq, serv_ase_vias, serv_agua_pot, num_medidor, acepta, responsable, fecha, estado, nombre_sol, nombre_tras, medio, chk_oficio, oficio, sol_cliente)
+    VALUES (@v_consecutivo, @p_cedula_sol, @p_cedula_tras, @p_gis, @p_serv_rec_bas, @p_serv_orn_mant_paq, @p_serv_ase_vias, @p_serv_agua_pot, @p_num_medidor, @p_acepta, @p_responsable, CURRENT_TIMESTAMP, '1', @p_nombre_sol, @p_nombre_tras, @p_medio, @p_chk_oficio, @p_oficio, @p_sol_cliente)
+
+  INSERT INTO [dbo].[tb_consecutivo]
+    VALUES (@v_consecutivo)
+
+  INSERT INTO [dbo].[tb_tiempos] (boleta, cedula, fecha, hora, tiempo, tipo)
+    VALUES (@v_consecutivo, @p_responsable, CURRENT_TIMESTAMP, FORMAT(CURRENT_TIMESTAMP, 'hh:mm:ss tt'), '0', 'Formulario para el traspaso de documentos')
+GO
+
+-- EXEC [dbo].[sp_guardar_traspasos] 'cedula_sol', 'cedula_tras', 'gis', 'serv_rec_bas', 'serv_orn_mant_paq', 'serv_ase_vias', 'serv_agua_pot', 'num_medidor', 'acepta', 'responsable', 'nombre_sol', 'nombre_tras', 'medio', 'chk_oficio', 'oficio', 'sol_cliente';
+-- GO
+
+
+
+
+
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     3.8 Requisitos de licencias (Modulo no funciona) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.8.1 Ley 7600 (No funciona) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 -- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         3.8.2 Ley de licores (No funciona) @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
